@@ -1,8 +1,8 @@
 # Jogo da Velha - Projeto de Programação Imperativa e Funcional
 
 ## 1. Membros da Equipe
-- João Lucas Marcolino Cavalcanti Silva (@joaolucas)
-- Isabela Karla de Araújo Silva (@isabelakarla)
+- João Lucas Marcolino Cavalcanti Silva 
+- Isabela Karla de Araújo Silva 
 
 ## 2. Disciplina
 Programação Imperativa e Funcional - 2024.2
