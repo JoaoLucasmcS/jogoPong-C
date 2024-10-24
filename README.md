@@ -2,7 +2,8 @@
 
 ## 1. Membros da Equipe
 - João Lucas Marcolino Cavalcanti Silva 
-- Isabela Karla de Araújo Silva 
+- Isabela Karla de Araújo Silva
+- Messias Daniel Ferreira da Silva Filho
 
 ## 2. Disciplina
 Programação Imperativa e Funcional - 2024.2
