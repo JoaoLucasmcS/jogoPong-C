@@ -68,7 +68,7 @@ void calcularPlacar() {
         resetarBolinha();
         screenDrawBorders();
     }
-}
+}   
 
 void moverRaquetes(int ch) {
     if (ch == 'w' && posicaoYRaquete1 > MINY + 1) posicaoYRaquete1--;
