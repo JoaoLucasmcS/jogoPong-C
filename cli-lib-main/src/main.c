@@ -1,17 +1,17 @@
+#include <stdio.h>
+#include "screen.h"
+#include "keyboard.h"
+#include "timer.h"
 
-
-// Tamanho da tela
-#define WIDTH 40
-#define HEIGHT 20
-
-<<<<<<< Updated upstream
+// Variáveis globais do jogo
 int pontoJogador1 = 0, pontoJogador2 = 0;
-int posicaoXRaquete = 5, posicaoYRaquete = MAXY/2;
-int x = 34, y = 12;
+int posicaoXRaquete1 = 5, posicaoYRaquete1 = MAXY / 2;
+int posicaoXRaquete2 = MAXX - 5, posicaoYRaquete2 = MAXY / 2;
+int x = MAXX / 2, y = MAXY / 2;
 int incX = 1, incY = 1;
 
-void mostrarBolinha(int nextX, int nextY)
-{
+// Funções auxiliares
+void mostrarBolinha(int nextX, int nextY) {
     screenSetColor(WHITE, WHITE);
     screenGotoxy(x, y);
     printf(" ");
@@ -21,188 +21,82 @@ void mostrarBolinha(int nextX, int nextY)
     printf("O");
 }
 
-void mostrarPlacar()
-{
+void mostrarPlacar() {
     screenSetColor(YELLOW, DARKGRAY);
     screenGotoxy(10, 2);
-    printf("Jogador 1 : %d ", pontoJogador1);
-
-}
-
-
-void mostrarPlacar2()
-{
-    screenSetColor(YELLOW, DARKGRAY);
+    printf("Jogador 1: %d", pontoJogador1);
     screenGotoxy(55, 2);
-    printf("Jogador 2 : %d", pontoJogador2);
- 
+    printf("Jogador 2: %d", pontoJogador2);
 }
 
-void raquete1(int nextXRaquete, int nextYRaquete)
-{
-    screenSetColor(BLUE, BLUE);     
-    screenGotoxy(posicaoXRaquete, posicaoYRaquete);
-    printf(" ");
-    posicaoXRaquete = nextXRaquete;
-    posicaoYRaquete = nextYRaquete;
-    screenGotoxy(posicaoXRaquete, posicaoYRaquete);
-    printf("I");
-}
-
-void calcularPlacar(){
-
-    if(x == MAXX - strlen("  ")){
-
-        pontoJogador1 += 1;
-        screenGotoxy(x, y);
+void raquete(int xRaquete, int yRaquete, int newXRaquete, int newYRaquete) {
+    screenSetColor(BLUE, BLUE);
+    for (int i = -1; i <= 1; i++) {
+        screenGotoxy(xRaquete, yRaquete + i);
         printf(" ");
-        x = MAXX/2; 
-        y = MAXY/2;
-        
-    } else if (x == MINX + strlen("  "))
-    {
-        pontoJogador2 += 1;
-        screenGotoxy(x,y);
-        printf(" ");
-        x = MAXX/2; 
-        y = MAXY/2;
-       
     }
-    
-=======
-// Posições e Velocidade da Bola
-int ballX, ballY;
-int ballVelX = 1, ballVelY = 1;
-
-// Posições das Raquetes e Pontuações
-int paddle1Y, paddle2Y;
-int score1 = 0, score2 = 0;
-
-// Configurações Iniciais
-void setup() {
-    ballX = WIDTH / 2;
-    ballY = HEIGHT / 2;
-    paddle1Y = HEIGHT / 2 - 2;
-    paddle2Y = HEIGHT / 2 - 2;
->>>>>>> Stashed changes
-}
-
-// Função para desenhar a tela
-void draw() {
-    system("cls"); // Limpa a tela
-    for (int i = 0; i < WIDTH + 2; i++) printf("#");
-    printf("\n");
-
-    for (int i = 0; i < HEIGHT; i++) {
-        for (int j = 0; j < WIDTH; j++) {
-            if (j == 0) printf("#"); // Borda esquerda
-            if (i == ballY && j == ballX) printf("O"); // Bola
-            else if (j == WIDTH - 1) printf("#"); // Borda direita
-            else if (j == 1 && (i >= paddle1Y && i < paddle1Y + 4)) printf("|"); // Raquete 1
-            else if (j == WIDTH - 2 && (i >= paddle2Y && i < paddle2Y + 4)) printf("|"); // Raquete 2
-            else printf(" ");
-        }
-        printf("\n");
-    }
-
-    for (int i = 0; i < WIDTH + 2; i++) printf("#");
-    printf("\n");
-    printf("Jogador 1: %d   Jogador 2: %d\n", score1, score2);
-}
-
-// Função para capturar entrada do usuário
-void input() {
-    if (_kbhit()) { // Se uma tecla foi pressionada
-        char key = _getch();
-        // Controles do Jogador 1 (W e S)
-        if (key == 'w' && paddle1Y > 0) paddle1Y--;
-        if (key == 's' && paddle1Y < HEIGHT - 4) paddle1Y++;
-        // Controles do Jogador 2 (I e K)
-        if (key == 'i' && paddle2Y > 0) paddle2Y--;
-        if (key == 'k' && paddle2Y < HEIGHT - 4) paddle2Y++;
+    for (int i = -1; i <= 1; i++) {
+        screenGotoxy(newXRaquete, newYRaquete + i);
+        printf("|");
     }
 }
 
-<<<<<<< Updated upstream
+void calcularPlacar() {
+    if (x >= MAXX - 1) {
+        pontoJogador1++;
+        x = MAXX / 2; y = MAXY / 2;
+    } else if (x <= 1) {
+        pontoJogador2++;
+        x = MAXX / 2; y = MAXY / 2;
+    }
+}
 
+void moverRaquetes(int ch) {
+    if (ch == 'w' && posicaoYRaquete1 > MINY + 1) posicaoYRaquete1--;
+    if (ch == 's' && posicaoYRaquete1 < MAXY - 2) posicaoYRaquete1++;
+    if (ch == 'i' && posicaoYRaquete2 > MINY + 1) posicaoYRaquete2--;
+    if (ch == 'k' && posicaoYRaquete2 < MAXY - 2) posicaoYRaquete2++;
+}
 
+int colisaoRaquete() {
+    if (x == posicaoXRaquete1 + 1 && y >= posicaoYRaquete1 - 1 && y <= posicaoYRaquete1 + 1) return -1;
+    if (x == posicaoXRaquete2 - 1 && y >= posicaoYRaquete2 - 1 && y <= posicaoYRaquete2 + 1) return -1;
+    return 1;
+}
 
-int main() 
-{
-    static int ch = 0;
-
+int main() {
+    int ch = 0;
     screenInit(1);
     keyboardInit();
     timerInit(50);
-    printkey(ch);
-    mostrarBolinha(x, y);
-    screenUpdate();
 
-    while (ch != 10) //enter
-    {
-        // Handle user input
-        if (keyhit()) 
-        {
+    while (ch != 10) { // Pressione Enter para sair
+        if (keyhit()) {
             ch = readch();
-            mostrarPlacar(ch);
-            mostrarPlacar2(ch);
-            calcularPlacar();
-            printkey(ch);
-            screenUpdate();
+            moverRaquetes(ch);
         }
 
-        // Update game state (move elements, verify collision, etc)
-        if (timerTimeOver() == 1)
-        {
+        if (timerTimeOver() == 1) {
             int newX = x + incX;
-            if (newX >= (MAXX -strlen("O") -1) || newX <= MINX+1) incX = -incX;
             int newY = y + incY;
-            if (newY >= MAXY-1 || newY <= MINY+1) incY = -incY;
 
-            int newXRaquete = x + incX;
-            if (newX >= (MAXX -strlen("O") -1) || newX <= MINX+1) incX = -incX;
-            int newYRaquete = y + incY;
-            if (newY >= MAXY-1 || newY <= MINY+1) incY = -incY;
+            // Colisão com bordas e raquetes
+            if (newY >= MAXY - 1 || newY <= MINY + 1) incY = -incY;
+            incX *= colisaoRaquete();
 
-            mostrarPlacar(ch);
-            mostrarPlacar2(ch);
+            // Movimentos da bola e raquetes
             mostrarBolinha(newX, newY);
+            raquete(posicaoXRaquete1, posicaoYRaquete1, posicaoXRaquete1, posicaoYRaquete1);
+            raquete(posicaoXRaquete2, posicaoYRaquete2, posicaoXRaquete2, posicaoYRaquete2);
             calcularPlacar();
-            printkey(ch);
+            mostrarPlacar();
             screenUpdate();
         }
-=======
-// Função para atualizar a lógica do jogo
-void update() {
-    ballX += ballVelX;
-    ballY += ballVelY;
-
-    // Colisão com as bordas superior e inferior
-    if (ballY <= 0 || ballY >= HEIGHT - 1) ballVelY = -ballVelY;
-
-    // Colisão com as raquetes
-    if (ballX == 2 && ballY >= paddle1Y && ballY < paddle1Y + 4) ballVelX = -ballVelX;
-    if (ballX == WIDTH - 3 && ballY >= paddle2Y && ballY < paddle2Y + 4) ballVelX = -ballVelX;
-
-    // Pontuação
-    if (ballX <= 0) {
-        score2++;
-        setup();
-    } else if (ballX >= WIDTH - 1) {
-        score1++;
-        setup();
->>>>>>> Stashed changes
     }
-}
 
-// Função principal
-int main() {
-    setup();
-    while (1) {
-        draw();
-        input();
-        update();
-        Sleep(50); // Controle de velocidade do jogo
-    }
+    // Encerrar o jogo e limpar a tela
+    keyboardDestroy();
+    screenDestroy();
+    timerDestroy();
     return 0;
 }
