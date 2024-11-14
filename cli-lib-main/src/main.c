@@ -4,6 +4,7 @@
 #include "../include/timer.h"
 
 #define TAMANHO_RAQUETE 1
+#define PONTOS_VITÓRIA 8 
 
 int pontoJogador1 = 0, pontoJogador2 = 0;
 int posicaoXRaquete1 = 5, posicaoYRaquete1 = MAXY / 2;
@@ -68,7 +69,7 @@ void calcularPlacar() {
         resetarBolinha();
         screenDrawBorders();
     }
-}   
+}
 
 void moverRaquetes(int ch) {
     if (ch == 'w' && posicaoYRaquete1 > MINY + 1) posicaoYRaquete1--;
@@ -104,7 +105,6 @@ void limparRaquetes() {
     printf(" ");
     screenGotoxy(posicaoXRaquete2, posicaoYRaquete2 - 1);
     printf(" ");
-    
 }
 
 int main() {
@@ -134,6 +134,19 @@ int main() {
             mostrarPlacar();
             screenUpdate();
             limparRaquetes();
+
+            
+            if (pontoJogador1 >= PONTOS_VITÓRIA) {
+                screenSetColor(YELLOW, DARKGRAY);
+                screenGotoxy(MAXX / 2 - 5, MAXY / 2);
+                printf("Jogador 1 Venceu!");
+                break;
+            } else if (pontoJogador2 >= PONTOS_VITÓRIA) {
+                screenSetColor(YELLOW, DARKGRAY);
+                screenGotoxy(MAXX / 2 - 5, MAXY / 2);
+                printf("Jogador 2 Venceu!");
+                break;
+            }
         }
     }
 
